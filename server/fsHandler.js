@@ -38,6 +38,28 @@ const fsHandler = {
       fsHandler.error.message = 'Вы не указали автора, либо отправили пустое сообщение'
       response.status(400).send(fsHandler.error)
     }
+  },
+  getMessages: (response) => {
+    const messages = []
+    try {
+      fs.readdir('./server/messages', async (err, files) => {
+        console.log(files)
+        for (let i = 0; i < files.length; i++) {
+          const fileData = await JSON.parse(fs.readFileSync(`./server/messages/${files[i]}` ).toString())
+          console.log(fileData)
+          messages.push(fileData)
+        }
+        console.log(messages)
+        const sortedMessages = messages.sort((a, b) => {
+          return new Date(b.datetime) - new Date(a.datetime)
+        })
+        console.log(sortedMessages)
+        response.status(200).send(sortedMessages.slice(0, 30).reverse())
+      })
+    } catch (e) {
+      fsHandler.error.message = e.message
+      response.status(500).send(fsHandler.error)
+    }
   }
 }
 
