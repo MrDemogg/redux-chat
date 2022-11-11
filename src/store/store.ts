@@ -1,13 +1,20 @@
-import {combineReducers, configureStore} from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import chatReducer from './reducers/ChatSlice'
+import {chatAPI} from "../service/ChatService";
 
 const rootReducer = combineReducers({
-  chatReducer
+  chatReducer,
+  [chatAPI.reducerPath]: chatAPI.reducer
 })
 
-export const setupStore = () => configureStore({
-  reducer: rootReducer
-})
+export const setupStore = (): any => {
+  return configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware()
+        .concat(chatAPI.middleware)
+  })
+}
 
 export type RootState = ReturnType<typeof rootReducer>
 export type AppStore = ReturnType<typeof setupStore>
