@@ -8,21 +8,14 @@ export const chatAPI = createApi({
   tagTypes: ['Post'],
   endpoints: (build) => ({
     fetchAllMessages: build.query<IGetMessage[], number>({
-      query: (limit: number = 30) => ({
+      query: (date) => ({
         url: '/messages',
+        method: 'GET',
         params: {
-          _limit: limit,
+          datetime: date ? date : null
         }
       }),
       providesTags: result => ['Post']
-    }),
-    fetchMessage: build.query<IGetMessage, string>({
-      query: (datetime) => ({
-        url: '/messages',
-        params: {
-          datetime: datetime
-        }
-      })
     }),
     createMessage: build.mutation<IGetMessage, IPostMessage>({
       query: (post) => ({
