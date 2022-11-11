@@ -39,22 +39,36 @@ const fsHandler = {
       response.status(400).send(fsHandler.error)
     }
   },
-  getMessages: (response) => {
+  getMessages: (response, datetime = null) => {
     const messages = []
     try {
       fs.readdir('./server/messages', async (err, files) => {
-        console.log(files)
         for (let i = 0; i < files.length; i++) {
           const fileData = await JSON.parse(fs.readFileSync(`./server/messages/${files[i]}` ).toString())
-          console.log(fileData)
           messages.push(fileData)
         }
-        console.log(messages)
-        const sortedMessages = messages.sort((a, b) => {
+        let sortedMessages
+        sortedMessages = messages.sort((a, b) => {
           return new Date(b.datetime) - new Date(a.datetime)
         })
-        console.log(sortedMessages)
-        response.status(200).send(sortedMessages.slice(0, 30).reverse())
+        if (datetime) {
+          let datetimeIsValid = false
+          for (let i = 0; i < sortedMessages.length; i++) {
+            if (sortedMessages[i].datetime === datetime) {
+              datetimeIsValid = true
+            }
+          }
+          if (datetimeIsValid) {
+            const messagesFromDatetime = sortedMessages.slice(0, sortedMessages.indexOf(datetime))
+            response.status(200).send(messagesFromDatetime.reverse())
+          } else {
+            fsHandler.error.errorGuilt = 'user'
+            fsHandler.error.message = 'Указанной даты нет в базе данных'
+            response.status(400).send(fsHandler.error)
+          }
+        } else {
+          response.status(200).send(sortedMessages.slice(0, 30).reverse())
+        }
       })
     } catch (e) {
       fsHandler.error.message = e.message

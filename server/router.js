@@ -9,6 +9,8 @@ router.post('/messages', (req, res) => {
 router.get('/messages', (req, res) => {
   if (!req.query.datetime) {
     fsHandler.getMessages(res)
+  } else {
+    fsHandler.getMessages(res, req.query.datetime === 'null' ? null : req.query.datetime)
   }
 })
 
