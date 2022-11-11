@@ -39,19 +39,19 @@ const fsHandler = {
       response.status(400).send(fsHandler.error)
     }
   },
-  getMessages: (response, datetime = null) => {
+  getMessages: (response, datetime = 'null') => {
     const messages = []
     try {
       fs.readdir('./server/messages', async (err, files) => {
         for (let i = 0; i < files.length; i++) {
-          const fileData = await JSON.parse(fs.readFileSync(`./server/messages/${files[i]}` ).toString())
+          const fileData = await JSON.parse(fs.readFileSync(`./server/messages/${files[i]}`).toString())
           messages.push(fileData)
         }
         let sortedMessages
         sortedMessages = messages.sort((a, b) => {
           return new Date(b.datetime) - new Date(a.datetime)
         })
-        if (datetime) {
+        if (datetime !== 'null') {
           let datetimeIsValid = false
           for (let i = 0; i < sortedMessages.length; i++) {
             if (sortedMessages[i].datetime === datetime) {
