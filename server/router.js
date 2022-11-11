@@ -7,7 +7,6 @@ router.post('/messages', (req, res) => {
 })
 
 router.get('/messages', (req, res) => {
-  console.log(req.query.datetime)
   if (req.query.datetime === '' || !req.query.datetime) {
     fsHandler.getMessages(res, 'null')
   } else {
