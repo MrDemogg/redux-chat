@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { uuidv } = require('uuidv4')
+const { v4: uuidv4 } = require('uuid');
 
 const fsHandler = {
   error: {
@@ -7,12 +7,13 @@ const fsHandler = {
     message: null
   },
   postMessage: async (request, response) => {
-    let uniqueId = uuidv()
+    let uniqueId = uuidv4()
+    let error = false
     if (request.author && request.message) {
-      if (request.author.length > 0 && request.message.length > 0) {
+      if (request.author.length !== 0 && request.message !== 0) {
         try {
           while (fs.existsSync(`./server/messages/${uniqueId}.json`)) {
-            uniqueId = uuidv()
+            uniqueId = uuidv4()
           }
           const writeData = {
             id: uniqueId,
@@ -20,16 +21,22 @@ const fsHandler = {
             author: request.author,
             datetime: new Date().toISOString()
           }
-          fs.writeFileSync(`./server/messages/${id}.json`, JSON.stringify(writeData))
+          fs.writeFileSync(`./server/messages/${uniqueId}.json`, JSON.stringify(writeData))
+          response.status(200).send('success')
         } catch (e) {
           fsHandler.error.message = e.message
           response.status(500).send(fsHandler.error)
         }
       } else {
-        fsHandler.error.errorGuilt = 'user'
-        fsHandler.error.message = 'Вы не указали автора, либо отправили пустое сообщение'
-        response.status(400).send(fsHandler.error)
+        error = true
       }
+    } else {
+      error = true
+    }
+    if (error) {
+      fsHandler.error.errorGuilt = 'user'
+      fsHandler.error.message = 'Вы не указали автора, либо отправили пустое сообщение'
+      response.status(400).send(fsHandler.error)
     }
   }
 }
