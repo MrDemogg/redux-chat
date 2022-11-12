@@ -5,6 +5,7 @@ import {Triangle} from "react-loader-spinner";
 import {useAppDispatch, useAppSelector} from "../hooks/redux";
 import {chatSlice} from "../store/reducers/ChatSlice";
 import CustomCard from "./UI/CustomCard";
+import DateCard from "./DateCard";
 
 const Messages = () => {
   const {datetime, errorInfo} = useAppSelector(state => state.chatReducer)
@@ -21,8 +22,8 @@ const Messages = () => {
   }
 
   return (
-    <Card style={{width: '70%'}}>
-      <Card.Body style={{height: '70%', overflowY: 'scroll'}}>
+    <Card>
+      <Card.Body>
         {isLoading
           ? <div style={{margin: 'auto', width: 80}}>
               <Triangle
@@ -43,13 +44,19 @@ const Messages = () => {
                   >Отправить запрос заново</Button>}
                 />
               </div>
-            : messages && messages.length > 0 ? messages.map(message =>
-                <div style={{marginTop: 20}} key={message.id}><CustomCard
-                  header={message.author}
-                  body={message.message}
-                  footer={<Card.Text>Дата отправки: {message.datetime}</Card.Text>}
-                /></div>
-              )
+            : messages && messages.length > 0 ?
+              <div style={{display: 'flex', justifyContent: 'space-between', height: 500, flexDirection: 'row'}}>
+                <div style={{width: '100%', overflowY: 'scroll'}}>
+                  {messages.map(message =>
+                    <div style={{marginTop: 20, width: '90%'}} key={message.id}><CustomCard
+                      header={message.author}
+                      body={message.message}
+                      footer={<Card.Text>Дата отправки: {message.datetime}</Card.Text>}
+                    /></div>
+                  )}
+                </div>
+                <DateCard/>
+              </div>
               : <Card.Title style={{textAlign: 'center'}}>Сообщений, пока, нет</Card.Title>
         }
       </Card.Body>
