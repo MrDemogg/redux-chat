@@ -1,4 +1,4 @@
 export interface IError {
-  message: string | null,
-  errorGuilt: string
+  error: string
+  status: string
 }
