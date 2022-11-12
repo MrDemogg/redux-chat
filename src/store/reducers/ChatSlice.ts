@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {IError} from "../../models/IError";
 
 interface ChatState {
@@ -9,8 +9,8 @@ interface ChatState {
 
 const initialState: ChatState = {
   errorInfo: {
-    message: '',
-    errorGuilt: ''
+    status: '',
+    error: ''
   },
   message: '',
   datetime: ''
@@ -20,15 +20,15 @@ export const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setName(state, action: PayloadAction<string>) {
+    setMessage(state, action: PayloadAction<string>) {
       state.message = action.payload
     },
-    setError(state, action: PayloadAction<IError>) {
+    setError(state, action: PayloadAction<any>) {
       state.errorInfo = action.payload
     },
-    setPosts(state, actions: PayloadAction<string>) {
+    setDatetime(state, actions: PayloadAction<string>) {
       state.datetime = actions.payload
-    }
+    },
   }
 })
 
