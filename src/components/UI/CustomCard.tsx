@@ -3,7 +3,7 @@ import {Card} from "react-bootstrap";
 
 interface CustomCardProps {
   header: string,
-  body: string,
+  body: string | number,
   footer: ReactNode
 }
 
