@@ -2,10 +2,7 @@ const fs = require('fs')
 const { v4: uuidv4 } = require('uuid');
 
 const fsHandler = {
-  error: {
-    errorGuilt: 'server',
-    message: null
-  },
+  error: null,
   postMessage: async (request, response) => {
     let uniqueId = uuidv4()
     let error = false
@@ -19,12 +16,12 @@ const fsHandler = {
             id: uniqueId,
             message: request.message,
             author: request.author,
-            datetime: new Date().toISOString()
+            datetime: new Date().toLocaleString().slice(0, -3)
           }
           fs.writeFileSync(`./server/messages/${uniqueId}.json`, JSON.stringify(writeData))
           response.status(200).send('success')
         } catch (e) {
-          fsHandler.error.message = e.message
+          fsHandler.error = e.message
           response.status(500).send(fsHandler.error)
         }
       } else {
@@ -34,8 +31,7 @@ const fsHandler = {
       error = true
     }
     if (error) {
-      fsHandler.error.errorGuilt = 'user'
-      fsHandler.error.message = 'Вы не указали автора, либо отправили пустое сообщение'
+      fsHandler.error = 'Вы не указали автора, либо отправили пустое сообщение'
       response.status(400).send(fsHandler.error)
     }
   },
@@ -62,8 +58,7 @@ const fsHandler = {
             const messagesFromDatetime = sortedMessages.slice(0, sortedMessages.indexOf(datetime))
             response.status(200).send(messagesFromDatetime.reverse())
           } else {
-            fsHandler.error.errorGuilt = 'user'
-            fsHandler.error.message = 'Указанной даты нет в базе данных'
+            fsHandler.error = 'Указанной даты нет в базе данных'
             response.status(400).send(fsHandler.error)
           }
         } else {
@@ -71,7 +66,7 @@ const fsHandler = {
         }
       })
     } catch (e) {
-      fsHandler.error.message = e.message
+      fsHandler.error = e.message
       response.status(500).send(fsHandler.error)
     }
   }
