@@ -26,7 +26,7 @@ const DateCard = () => {
   }
 
   return (
-    <Card>
+    <Card style={{height: 280, margin: 'auto'}}>
       <Card.Header><Card.Title style={{textAlign: 'center'}}>Запрос сообщений с определённой даты</Card.Title></Card.Header>
       <Card.Body>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
