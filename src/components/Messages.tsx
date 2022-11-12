@@ -16,15 +16,15 @@ const Messages = () => {
   }
 
   const refetchHandler = () => {
-    dispatch(chatSlice.actions.setError({error: '', status: ''}))
+    dispatch(chatSlice.actions.setError({status: null}))
     refetch()
   }
 
   return (
-    <Card>
+    <Card style={{width: '70%'}}>
       <Card.Body style={{height: '70%', overflowY: 'scroll'}}>
         {isLoading
-          ? <div style={{margin: '0 auto', width: 80}}>
+          ? <div style={{margin: 'auto', width: 80}}>
               <Triangle
                 height="80"
                 width="80"
@@ -32,24 +32,25 @@ const Messages = () => {
                 visible={isLoading}
               />
             </div>
-          : errorInfo.error.length > 0
+          : errorInfo.status
             ? <div style={{width: 400, margin: '0 auto'}}>
                 <CustomCard
-                  header={'Ошибка'}
-                  body={errorInfo.error}
+                  header={`Ошибка! Статус ошибки: ${errorInfo.status}`}
+                  body={errorInfo.data ? errorInfo.data : errorInfo.status}
                   footer={<Button
                     onClick={refetchHandler}
                     style={{width: '100%'}}
                   >Отправить запрос заново</Button>}
                 />
               </div>
-            : messages && messages.length > 0 && messages.map(message =>
-              <div style={{marginTop: 20}} key={message.id}><CustomCard
-                header={message.author}
-                body={message.message}
-                footer={<Card.Text>Дата отправки: {new Date(message.datetime).toUTCString()}</Card.Text>}
-              /></div>
-            )
+            : messages && messages.length > 0 ? messages.map(message =>
+                <div style={{marginTop: 20}} key={message.id}><CustomCard
+                  header={message.author}
+                  body={message.message}
+                  footer={<Card.Text>Дата отправки: {message.datetime}</Card.Text>}
+                /></div>
+              )
+              : <Card.Title style={{textAlign: 'center'}}>Сообщений, пока, нет</Card.Title>
         }
       </Card.Body>
     </Card>
