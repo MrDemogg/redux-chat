@@ -1,16 +1,15 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {IError} from "../../models/IError";
+import {IRtkError} from "../../models/IRtkError";
 
 interface ChatState {
-  errorInfo: IError
+  errorInfo: IRtkError
   message: string
   datetime: string
 }
 
 const initialState: ChatState = {
   errorInfo: {
-    status: '',
-    error: ''
+    status: null,
   },
   message: '',
   datetime: ''
