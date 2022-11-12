@@ -49,14 +49,19 @@ const fsHandler = {
         })
         if (datetime !== 'null') {
           let datetimeIsValid = false
+          let datetimeIndex = 0
           for (let i = 0; i < sortedMessages.length; i++) {
+            console.log(i, sortedMessages[i].datetime)
             if (sortedMessages[i].datetime === datetime) {
+              datetimeIndex = i
               datetimeIsValid = true
+              i += sortedMessages.length
             }
           }
           if (datetimeIsValid) {
-            const messagesFromDatetime = sortedMessages.slice(0, sortedMessages.indexOf(datetime))
-            response.status(200).send(messagesFromDatetime.reverse())
+            console.log(datetimeIndex, 1)
+            const messagesFromDatetime = sortedMessages.reverse().slice(datetimeIndex)
+            response.status(200).send(messagesFromDatetime)
           } else {
             fsHandler.error = 'Указанной даты нет в базе данных'
             response.status(400).send(fsHandler.error)
