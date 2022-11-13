@@ -22,7 +22,10 @@ const Messages = () => {
   }
 
   return (
-    <Card>
+    <>
+      <Card.Header>
+        <Button onClick={refetchHandler}>Refetch</Button>
+      </Card.Header>
       <Card.Body>
         {isLoading
           ? <div style={{margin: 'auto', width: 80}}>
@@ -34,7 +37,7 @@ const Messages = () => {
               />
             </div>
           : errorInfo.status
-            ? <div style={{width: 400, margin: '0 auto'}}>
+            ? <div style={{margin: 'auto', width: 400}}>
                 <CustomCard
                   header={`Ошибка! Статус ошибки: ${errorInfo.status}`}
                   body={errorInfo.data ? errorInfo.data : errorInfo.status}
@@ -45,7 +48,7 @@ const Messages = () => {
                 />
               </div>
             : messages && messages.length > 0 ?
-              <div style={{display: 'flex', justifyContent: 'space-between', height: 500, flexDirection: 'row'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', height: 670, flexDirection: 'row'}}>
                 <div style={{width: '100%', overflowY: 'scroll'}}>
                   {messages.map(message =>
                     <div style={{marginTop: 20, width: '90%'}} key={message.id}><CustomCard
@@ -60,7 +63,7 @@ const Messages = () => {
               : <Card.Title style={{textAlign: 'center'}}>Сообщений, пока, нет</Card.Title>
         }
       </Card.Body>
-    </Card>
+    </>
   );
 };
 
