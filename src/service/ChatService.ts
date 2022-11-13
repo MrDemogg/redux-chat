@@ -21,7 +21,8 @@ export const chatAPI = createApi({
       query: (message) => ({
         url: '/messages',
         method: 'POST',
-        body: message
+        body: message,
+        responseHandler: response => response.text()
       }),
       invalidatesTags: ['Post']
     })
