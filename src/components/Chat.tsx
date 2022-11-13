@@ -1,13 +1,13 @@
 import React from 'react';
 import {Card} from "react-bootstrap";
 import Messages from "./Messages";
+import Control from "./Control";
 
 const Chat = () => {
   return (
-    <Card>
-      <Card.Body>
-        <Messages/>
-      </Card.Body>
+    <Card style={{height: 900}}>
+      <Messages/>
+      <Card.Footer><Control /></Card.Footer>
     </Card>
   );
 };
