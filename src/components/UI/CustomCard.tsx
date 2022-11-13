@@ -9,7 +9,7 @@ interface CustomCardProps {
 
 const CustomCard: FC<CustomCardProps> = ({header, body, footer}) => {
   return (
-    <Card style={{maxWidth: '70%'}}>
+    <Card>
       <Card.Header><Card.Title>{header}</Card.Title></Card.Header>
       <Card.Body><Card.Text>{body}</Card.Text></Card.Body>
       <Card.Footer>{footer}</Card.Footer>
