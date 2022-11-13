@@ -16,7 +16,7 @@ const fsHandler = {
             id: uniqueId,
             message: request.message,
             author: request.author,
-            datetime: new Date().toLocaleString().slice(0, -3)
+            datetime: new Date().toLocaleString()
           }
           fs.writeFileSync(`./server/messages/${uniqueId}.json`, JSON.stringify(writeData))
           response.status(200).send('success')
@@ -40,34 +40,39 @@ const fsHandler = {
     try {
       fs.readdir('./server/messages', async (err, files) => {
         for (let i = 0; i < files.length; i++) {
-          const fileData = await JSON.parse(fs.readFileSync(`./server/messages/${files[i]}`).toString())
           messages.push(fileData)
         }
-        let sortedMessages
-        sortedMessages = messages.sort((a, b) => {
-          return new Date(b.datetime) - new Date(a.datetime)
-        })
+        const sortedMessages = messages
+          .map(n => {
+            return [ n.datetime, {...n, datetime: +new Date(n.datetime.replace(/(\d+)\.(\d+)\.(\d+),/, '$3-$2-$1'))} ]
+          })
+          .sort((a, b) => {
+            console.log(a[1].datetime - b[1].datetime)
+            return a[1].datetime - b[1].datetime
+          })
+          .map(n => {
+            return {...n[1], datetime: n[0]}
+          });
         if (datetime !== 'null') {
           let datetimeIsValid = false
           let datetimeIndex = 0
           for (let i = 0; i < sortedMessages.length; i++) {
-            console.log(i, sortedMessages[i].datetime)
             if (sortedMessages[i].datetime === datetime) {
               datetimeIndex = i
               datetimeIsValid = true
               i += sortedMessages.length
+              break;
             }
           }
           if (datetimeIsValid) {
-            console.log(datetimeIndex, 1)
-            const messagesFromDatetime = sortedMessages.reverse().slice(datetimeIndex)
+            const messagesFromDatetime = sortedMessages.slice(datetimeIndex)
             response.status(200).send(messagesFromDatetime)
           } else {
             fsHandler.error = 'Указанной даты нет в базе данных'
             response.status(400).send(fsHandler.error)
           }
         } else {
-          response.status(200).send(sortedMessages.slice(0, 30).reverse())
+          response.status(200).send(sortedMessages.slice(0, 30))
         }
       })
     } catch (e) {
