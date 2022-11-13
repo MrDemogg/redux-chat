@@ -40,6 +40,7 @@ const fsHandler = {
     try {
       fs.readdir('./server/messages', async (err, files) => {
         for (let i = 0; i < files.length; i++) {
+          const fileData = await JSON.parse(fs.readFileSync(`./server/messages/${files[i]}`).toString())
           messages.push(fileData)
         }
         const sortedMessages = messages
