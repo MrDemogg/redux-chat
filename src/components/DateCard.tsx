@@ -4,12 +4,13 @@ import {useAppDispatch} from "../hooks/redux";
 import {chatSlice} from "../store/reducers/ChatSlice";
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {Stack, TextField} from "@mui/material";
+import {Alert, Collapse, Stack, TextField} from "@mui/material";
 import {Dayjs} from "dayjs";
 
 const DateCard = () => {
   const [date, setDate] = useState<Dayjs | null>(null)
   const [time, setTime] = useState<Dayjs | null>(null)
+  const [alert, setAlert] = useState(false)
   const [disabledReset, setDisabledReset] = useState(true)
   const dispatch = useAppDispatch()
 
@@ -19,6 +20,8 @@ const DateCard = () => {
       const newDate = new Date(date.toISOString()).toLocaleString()
       const newTime = new Date(time.toISOString()).toLocaleString()
       dispatch(chatSlice.actions.setDatetime(newDate.slice(0, -8).concat(newTime.slice(-8))))
+    } else {
+      setAlert(true)
     }
   }
 
@@ -30,7 +33,7 @@ const DateCard = () => {
   }
 
   return (
-    <Card style={{height: 400, margin: 'auto', marginRight: 100, marginLeft: 100}}>
+    <Card style={{height: 465, margin: 'auto', marginRight: 100, marginLeft: 100}}>
       <Card.Header><Card.Title style={{textAlign: 'center'}}>Запрос сообщений с определённой даты</Card.Title></Card.Header>
       <Card.Body>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -57,6 +60,19 @@ const DateCard = () => {
               renderInput={(params) => <TextField {...params} />}
             />
           </Stack>
+          <Collapse in={alert} style={{marginTop: 10}}>
+            <Alert
+              action={
+                <Button
+                  onClick={() => setAlert(false)}
+                >OK</Button>
+              }
+              sx={{ mb: 2 }}
+              severity={'error'}
+            >
+              Вы не указали дату или время
+            </Alert>
+          </Collapse>
         </LocalizationProvider>
       </Card.Body>
       <Card.Footer>
